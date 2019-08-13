@@ -25,6 +25,11 @@ jobs:
     docker:
       - image: alpine:3.10.1
     steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - wcbot-{{ checksum "composer.lock" }}
+            - wcbot-
       - run: ls -la
 
 workflows:
