@@ -1,14 +1,10 @@
-version: "3.7"
+version: "3.3"
 services:
   php-fpm:
     image: php:7.3.8-fpm
     volumes:
       - ./:/var/www/html
     restart: always
-    networks:
-      - db
-    links:
-      - db
   nginx:
     image: nginx:alpine
     volumes:
@@ -16,22 +12,6 @@ services:
       - ./:/var/www/html
     links:
       - php-fpm
-    networks:
-      - db
     restart: always
     ports:
       - {http_port}:80
-  db:
-    image: mysql:8.0.17
-    volumes:
-      - ./db:/var/lib/mysql
-    networks: 
-      - db
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: {mysql_root_pwd}
-      MYSQL_USER: {mysql_user}
-      MYSQL_PASSWORD: {mysql_password}
-networks:
-  db: 
-    driver: bridge

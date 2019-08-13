@@ -5,10 +5,6 @@ services:
     volumes:
       - ./:/var/www/html
     restart: always
-    networks: 
-      - db
-    links:
-      - db
   nginx:
     image: nginx:alpine
     volumes:
@@ -16,24 +12,6 @@ services:
       - ./:/var/www/html
     links:
       - php-fpm
-    networks:
-      - db
     restart: always
     ports:
       - 8080:80
-  db:
-    image: mysql:8.0.17
-    volumes:
-      - ./db:/var/lib/mysql
-    networks: 
-      - db
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: wcbot
-      MYSQL_USER: wcbot
-      MYSQL_PASSWORD: wcbot
-    ports:
-      - 3306:3306
-networks:
-  db: 
-    driver: bridge
