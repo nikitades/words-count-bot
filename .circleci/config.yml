@@ -26,3 +26,12 @@ jobs:
       - image: alpine:3.10.1
     steps:
       - run: ls -la
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
