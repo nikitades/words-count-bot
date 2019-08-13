@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/php:7.3.8-stretch
+      - image: circleci/php:7.3.8-buster
     steps:
       - checkout
       - restore_cache:
@@ -23,7 +23,7 @@ jobs:
   #     - image: circleci/php:7.3.8-stretch
   deploy:
     docker:
-      - image: alpine:3.10.1
+      - image: circleci/buildpack-deps:buster
     steps:
       - checkout
       - restore_cache:
