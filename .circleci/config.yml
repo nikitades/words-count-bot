@@ -11,6 +11,7 @@ jobs:
             - wcbot-
       - run: composer install -n --prefer-dist
       - run: sed -i.bak "s/APP_ENV=dev/${APP_MODE}/g" .env
+      - run: cat .env
       - run: composer dump-env $APP_MODE
       - run: sed -i.bak "s/{http_port}/${HTTP_PORT}/g" docker-compose.prod.yml
       - run: sed -i.bak "s/{mysql_root_pwd}/${MYSQL_ROOT_PWD}/g" docker-compose.prod.yml
