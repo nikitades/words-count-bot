@@ -25,11 +25,8 @@ jobs:
     docker:
       - image: circleci/buildpack-deps:buster
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - wcbot-{{ checksum "composer.lock" }}
-            - wcbot-
+      - attach_workspace:
+          at: /tmp/proj
       - run: ls -la
 
 workflows:
