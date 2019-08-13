@@ -1,0 +1,28 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/php:7.3.8-stretch
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - wcbot-{{ checksum "composer.lock" }}
+            - wcbot-
+      - run: composer install -n --prefer-dist
+      - save_cache:
+          key: wcbot-{{ checksum "composer.lock" }}
+          paths:
+            - ./vendor
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - ./
+  # test:
+  #   docker:
+  #     - image: circleci/php:7.3.8-stretch
+  deploy:
+    docker:
+      - image: alpine:3.10.1
+    steps:
+      - run: ls -la
