@@ -16,7 +16,7 @@ services:
       - php-fpm
     restart: always
     ports:
-      - {mysql_port}:80
+      - {http_port}:80
   db:
     image: mysql:8.0.17
     volumes:
