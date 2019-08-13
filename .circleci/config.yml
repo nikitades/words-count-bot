@@ -10,12 +10,12 @@ jobs:
             - wcbot-{{ checksum "composer.lock" }}
             - wcbot-
       - run: composer install -n --prefer-dist
-      - run: sed -i "" "s/APP_ENV=dev/${APP_MODE}/g" .env
+      - run: sed -i.bak "s/APP_ENV=dev/${APP_MODE}/g" .env
       - run: composer dump-env $APP_MODE
-      - run: sed -i "" "s/{http_port}/${HTTP_PORT}/g" docker-compose.prod.yml
-      - run: sed -i "" "s/{mysql_root_pwd}/${MYSQL_ROOT_PWD}/g" docker-compose.prod.yml
-      - run: sed -i "" "s/{mysql_user}/${MYSQL_USER}/g" docker-compose.prod.yml
-      - run: sed -i "" "s/{mysql_password}/${MYSQL_PASSWORD}/g" docker-compose.prod.yml
+      - run: sed -i.bak "s/{http_port}/${HTTP_PORT}/g" docker-compose.prod.yml
+      - run: sed -i.bak "s/{mysql_root_pwd}/${MYSQL_ROOT_PWD}/g" docker-compose.prod.yml
+      - run: sed -i.bak "s/{mysql_user}/${MYSQL_USER}/g" docker-compose.prod.yml
+      - run: sed -i.bak "s/{mysql_password}/${MYSQL_PASSWORD}/g" docker-compose.prod.yml
       - save_cache:
           key: wcbot-{{ checksum "composer.lock" }}
           paths:
