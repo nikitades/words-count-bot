@@ -5,6 +5,8 @@ services:
     volumes:
       - ./:/var/www/html
     restart: always
+    networks:
+      - db
     links:
       - db
   nginx:
@@ -14,6 +16,8 @@ services:
       - ./:/var/www/html
     links:
       - php-fpm
+    networks:
+      - db
     restart: always
     ports:
       - {http_port}:80
@@ -21,8 +25,13 @@ services:
     image: mysql:8.0.17
     volumes:
       - ./db:/var/lib/mysql
+    networks: 
+      - db
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: {mysql_root_pwd}
       MYSQL_USER: {mysql_user}
       MYSQL_PASSWORD: {mysql_password}
+networks:
+  db: 
+    driver: bridge
