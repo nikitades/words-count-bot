@@ -16,15 +16,13 @@ services:
       - php-fpm
     restart: always
     ports:
-      - 8080:80
+      - {mysql_port}:80
   db:
     image: mysql:8.0.17
     volumes:
       - ./db:/var/lib/mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: wcbot
-      MYSQL_USER: wcbot
-      MYSQL_PASSWORD: wcbot
-    ports:
-      - 3306:3306
+      MYSQL_ROOT_PASSWORD: {mysql_root_pwd}
+      MYSQL_USER: {mysql_user}
+      MYSQL_PASSWORD: {mysql_password}
