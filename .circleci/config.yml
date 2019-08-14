@@ -46,7 +46,7 @@ jobs:
                 --exclude-from=".gitignore" \
                 --exclude authorized_keys \
                 . $REMOTE_USERNAME@$REMOTE_HOST:$REMOTE_PATH
-      - run: ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST "cd ${REMOTE_PATH} && docker-compose down && docker-compose up -d"
+      - run: ssh -o "StrictHostKeyChecking=no" $REMOTE_USERNAME@$REMOTE_HOST "cd ${REMOTE_PATH} && docker-compose down && docker-compose -f docker-compose.prod.yml up"
 
 workflows:
   version: 2
