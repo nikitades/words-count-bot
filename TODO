@@ -1,7 +1,11 @@
 1. Design the deployment scheme
-    1.1 Codebase in a docker image and docker-compose on server to run the adjacent services (mysql)
-    1.2 Database as a docker image with a folder bound to that image 
-    1.3 After the commit the docker image is build and sent to docker hub
+  v 1.1 Codebase in a docker image and docker-compose on server to run the adjacent services (mysql)
+  v 1.2 Database as a docker image with a folder bound to that image - decided to have a signle db outside the docker.
+        (Since this setup's purpose is just to run some software easily, it's no matter how the DB is set up.
+        But as soon as this project comes to the real world, it's better to have a standalone highload-ready database than a bunch of dockerized mysql's)
+    1.3 After the commit the docker image is build and sent to docker hub - it turned out that it is easier to just use prebuild
+        php-fpm and nginx images than to make my own (probably not as good as these two). So the was another way to deliver the code to the server:
+        rsync. E.g. copy the code, restart the environment.
     1.4 And then we restart the production docker-compose rack using the newly created image (restart=always)
 2. Define the basic functionality
     2.1 The telegram webhook receiving words usage info
