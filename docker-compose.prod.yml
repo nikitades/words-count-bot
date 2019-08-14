@@ -2,6 +2,7 @@ version: "3.3"
 services:
   php-fpm:
     image: php:7.3.8-fpm
+    user: "${UID}:${GID}"
     volumes:
       - ./:/var/www/html
     restart: always
