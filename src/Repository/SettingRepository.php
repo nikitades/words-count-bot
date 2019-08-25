@@ -32,7 +32,7 @@ class SettingRepository extends ServiceEntityRepository
                                 ->andWhere('s.name = :val')
                                 ->setParameter('val', $name)
                                 ->getQuery()
-                                ->getSingleResult();
+                                ->getOneOrNullResult();
         if ($existingSetting) {
             $existingSetting->setValue($value);
             $this->_em->persist($existingSetting);
@@ -43,6 +43,16 @@ class SettingRepository extends ServiceEntityRepository
         $this->_em->persist($newSetting);
         $this->_em->flush();
         return $newSetting;
+    }
+
+    public function delete(string $name): void
+    {
+        $this->createQueryBuilder('s')
+            ->andWhere('s.name = :val')
+            ->setParameter('val', $name)
+            ->delete()
+            ->getQuery()
+            ->execute();
     }
 
     // /**

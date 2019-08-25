@@ -10,12 +10,12 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class BotSetTokenCommand extends Command
+class BotFlushTokenCommand extends Command
 {
-    protected static $defaultName = 'bot:set-token';
-    
+    protected static $defaultName = 'bot:flush-token';
+
     /**
-     * Setting repo
+     * SettingRepository
      *
      * @var SettingRepository
      */
@@ -30,16 +30,16 @@ class BotSetTokenCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Sets a secure telegram token for the bot')
-            ->addArgument('token', InputArgument::REQUIRED, 'The token')
+            ->setDescription('Add a short description for your command')
+            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
+            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $token = $input->getArgument('token');
-        $this->sr->setOrCreate('token', $token);
-        $io->success('Token successfully set');
+        $this->sr->delete('token');
+        $io->warning('Token flushed');
     }
 }
