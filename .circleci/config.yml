@@ -38,8 +38,6 @@ jobs:
     - run: sudo -E docker-php-ext-install mysqli pdo pdo_mysql
     - run: sed -i.bak "s/${MYSQL_HOST}/${MYSQL_REMOTE_HOST}/g" .env
     - run: composer dump-env $APP_MODE
-    - run: cat .env
-    - run: cat .env.local.php
     - run: bin/console doctrine:migration:migrate --no-interaction
   # test:
   #   docker:
