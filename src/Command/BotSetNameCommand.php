@@ -10,12 +10,12 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class BotFlushTokenCommand extends Command
+class BotSetNameCommand extends Command
 {
-    protected static $defaultName = 'bot:flush-token';
-
+    protected static $defaultName = 'bot:set-name';
+    
     /**
-     * SettingRepository
+     * Setting repo
      *
      * @var SettingRepository
      */
@@ -27,17 +27,24 @@ class BotFlushTokenCommand extends Command
         $this->sr = $sr;
     }
 
+
     protected function configure()
     {
         $this
-            ->setDescription('Removes the token');
+            ->setDescription('Sets the bot name')
+            ->addArgument('name', InputArgument::REQUIRED, 'Bot\'s name');
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $this->sr->delete('token');
-        $io->warning('Token flushed');
+        $name = $input->getArgument('name');
+
+        $this->sr->setOrCreate('botname', $name);
+
+        //прочекать что все переменные в порядке
+        
+        $io->success('Name successfully set: ' . $name);
     }
 }

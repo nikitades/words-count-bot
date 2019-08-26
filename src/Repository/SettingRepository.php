@@ -55,6 +55,15 @@ class SettingRepository extends ServiceEntityRepository
             ->execute();
     }
 
+    public function get(string $name): ?Setting
+    {
+        return $this->createQueryBuilder('s')
+                    ->andWhere('s.name = :val')
+                    ->setParameter('val', $name)
+                    ->getQuery()
+                    ->getOneOrNullResult();
+    }
+
     // /**
     //  * @return Setting[] Returns an array of Setting objects
     //  */

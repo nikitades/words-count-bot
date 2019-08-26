@@ -10,18 +10,17 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class BotFlushTokenCommand extends Command
+class BotCheckTokenCommand extends Command
 {
-    protected static $defaultName = 'bot:flush-token';
-
+    protected static $defaultName = 'bot:check-token';
     /**
-     * SettingRepository
+     * Setting repo
      *
      * @var SettingRepository
      */
     protected $sr;
 
-    public function __construct(SettingRepository $sr)
+    public function __construct (SettingRepository $sr)
     {
         parent::__construct();
         $this->sr = $sr;
@@ -30,14 +29,23 @@ class BotFlushTokenCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Removes the token');
+            ->setDescription('Checks the token and show last 4 symbols if found');
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $this->sr->delete('token');
-        $io->warning('Token flushed');
+        
+        $currentToken = $this->sr->get('token');
+
+        if ($currentToken) {
+            $val = $currentToken->getValue();
+            $subval = substr($val, -4, 4);
+            $io->success('Current token: ...' . $subval);
+        } else {
+            $io->error('No token found!');
+        }
+
     }
 }

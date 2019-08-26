@@ -30,7 +30,7 @@ class BotSetTokenCommand extends Command
     protected function configure()
     {
         $this
-            ->setDescription('Sets a secure telegram token for the bot')
+            ->setDescription('Sets a secure telegram token')
             ->addArgument('token', InputArgument::REQUIRED, 'The token')
         ;
     }
