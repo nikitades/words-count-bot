@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\BotWrapper;
+use Psr\Log\LoggerInterface;
 use Longman\TelegramBot\Telegram;
 use App\Repository\SettingRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Longman\TelegramBot\Exception\TelegramException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BotController extends AbstractController
@@ -25,23 +28,23 @@ class BotController extends AbstractController
     /**
      * @Route("/bot/handler", name="webhookHandler")
      */
-    public function index(Request $request)
+    public function index(Request $request, BotWrapper $botWrapper)
     {
         if ($request->query->get('test')) {
             return $this->json([
                 'status' => 'ok'
             ]);
         }
-        $botName = $this->sr->get('botname');
-        if (!$botName) {
-            throw new Exception("No predefined bot name found; run bot:set-name");
+        
+        try {
+            $botWrapper->run();
+        } catch (TelegramException $e) {
+            return $this->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
         }
-        $apiKey = $this->sr->get('token')->getValue();
-        if (!$botName) {
-            throw new Exception("No API key found; run bot:set-token");
-        }
-        $client = new Telegram($apiKey, $botName);
-        $client->handle();
+        
         return $this->json([
             'status' => 'ok'
         ]);
