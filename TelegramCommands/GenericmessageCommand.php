@@ -10,9 +10,11 @@
 
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
-use Longman\TelegramBot\Commands\SystemCommand;
-use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Telegram;
+use Longman\TelegramBot\Conversation;
+use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Generic message command
@@ -21,6 +23,22 @@ use Longman\TelegramBot\Request;
  */
 class GenericmessageCommand extends SystemCommand
 {
+
+    /**
+     * Logger instance
+     *
+     * @var Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(Telegram $tg, Update $update)
+    {
+        parent::__construct($tg, $update);
+
+        global $kernel;
+        $this->logger = $kernel->getContainer()->get("logger.pub");
+    }
+
     /**
      * @var string
      */
@@ -49,8 +67,9 @@ class GenericmessageCommand extends SystemCommand
      */
     public function execute()
     {
+        $this->logger->debug("Generic message executed");
         /**
-         *  TODO: 
+         *  TODO:
          *          -split the incoming message
          *          -add the word by chat usage increment
          * */

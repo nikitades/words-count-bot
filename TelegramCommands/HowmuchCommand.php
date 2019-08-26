@@ -11,7 +11,9 @@
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
 use Longman\TelegramBot\Request;
+use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\Conversation;
+use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Commands\UserCommand;
 
 /**
@@ -21,6 +23,21 @@ use Longman\TelegramBot\Commands\UserCommand;
  */
 class HowmuchCommand extends UserCommand
 {
+    /**
+     * Logger instance
+     *
+     * @var Psr\Log\LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(Telegram $tg, Update $update)
+    {
+        parent::__construct($tg, $update);
+
+        global $kernel;
+        $this->logger = $kernel->getContainer()->get("logger.pub");
+    }
+    
     /**
      * @var string
      */
@@ -55,12 +72,14 @@ class HowmuchCommand extends UserCommand
             'text' => 'huh!',
             'chat_id' => $chat_id
         ]);
+
+        $this->logger->debug("How much command executed");
         
         /**
          * TODO:
          *      - if no options given, tell three most used words by chat
          *      - if the word is given, tell it's used times count
-         * 
+         *
          */
     }
 }
