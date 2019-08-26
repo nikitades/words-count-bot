@@ -39,6 +39,7 @@ jobs:
     steps:
       - attach_workspace:
           at: .
+      - run: cat .env.local.php
       - run: sudo apt update && sudo apt install rsync
       - run: 
           name: Deploying
