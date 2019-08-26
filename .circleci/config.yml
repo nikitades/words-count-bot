@@ -36,12 +36,7 @@ jobs:
     - attach_workspace:
         at: .
     - run: sudo -E docker-php-ext-install mysqli pdo pdo_mysql
-    - run: sed -i.bak "s/APP_ENV=dev/APP_ENV=${APP_MODE}/g" .env
-    - run: sed -i.bak "s/{db_user}/${MYSQL_USER}/g" .env
-    - run: sed -i.bak "s/{db_password}/${MYSQL_PASSWORD}/g" .env
-    - run: sed -i.bak "s/{db_host}/${MYSQL_REMOTE_HOST}/g" .env
-    - run: sed -i.bak "s/{db_port}/${MYSQL_PORT}/g" .env
-    - run: sed -i.bak "s/{db_name}/${MYSQL_DBNAME}/g" .env
+    - run: sed -i.bak "s/${MYSQL_HOST}/${MYSQL_REMOTE_HOST}/g" .env
     - run: composer dump-env $APP_MODE
     - run: cat .env
     - run: cat .env.local.php
