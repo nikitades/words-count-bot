@@ -24,6 +24,7 @@ class BotSetWebhookCommand extends Command
 
     public function __construct(SettingRepository $sr)
     {
+        parent::__construct();
         $this->sr = $sr;
     }
 
@@ -40,7 +41,7 @@ class BotSetWebhookCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $wh = $input->getArgument('webhook');
-        $apiKey = $this->sr->get();
+        $apiKey = $this->sr->get('token')->getValue();
         $botName = $input->getOption('botname');
 
         try {

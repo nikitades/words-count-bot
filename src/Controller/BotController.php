@@ -36,11 +36,14 @@ class BotController extends AbstractController
         if (!$botName) {
             throw new Exception("No predefined bot name found; run bot:set-name");
         }
-        $apiKey = $this->sr->get('token');
+        $apiKey = $this->sr->get('token')->getValue();
         if (!$botName) {
             throw new Exception("No API key found; run bot:set-token");
         }
         $client = new Telegram($apiKey, $botName);
         $client->handle();
+        return $this->json([
+            'status' => 'ok'
+        ]);
     }
 }
