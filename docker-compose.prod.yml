@@ -1,7 +1,9 @@
 version: "3.3"
 services:
   php-fpm:
-    image: php:7.3.8-fpm
+    build:
+      context: .
+      dockerfile: ./docker/php-fpm.dockerfile
     user: "${UID}:${GID}"
     volumes:
       - ./:/var/www/html
