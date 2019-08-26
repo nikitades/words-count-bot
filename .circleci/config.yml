@@ -43,6 +43,7 @@ jobs:
     - run: sed -i.bak "s/{db_port}/${MYSQL_PORT}/g" .env
     - run: sed -i.bak "s/{db_name}/${MYSQL_DBNAME}/g" .env
     - run: composer dump-env $APP_MODE
+    - run: cat .env.local.php
     - run: bin/console doctrine:migration:migrate --no-interaction
   # test:
   #   docker:
