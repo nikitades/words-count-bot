@@ -21,6 +21,7 @@ jobs:
       - run: sed -i.bak "s/{mysql_root_pwd}/${MYSQL_ROOT_PWD}/g" docker-compose.prod.yml
       - run: sed -i.bak "s/{mysql_user}/${MYSQL_USER}/g" docker-compose.prod.yml
       - run: sed -i.bak "s/{mysql_password}/${MYSQL_PASSWORD}/g" docker-compose.prod.yml
+      - run: cat .env.local.php
       - save_cache:
           key: wcbot-{{ checksum "composer.lock" }}
           paths:
