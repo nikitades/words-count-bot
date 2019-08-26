@@ -67,9 +67,10 @@ class HowmuchCommand extends UserCommand
     public function execute()
     {
         $chat_id = $this->getMessage()->getChat()->id;
+        $text = $this->getMessage()->getText(true);
 
         Request::sendMessage([
-            'text' => 'huh!',
+            'text' => 'huh!' . ($text ? " ({$text})" : ""),
             'chat_id' => $chat_id
         ]);
 
