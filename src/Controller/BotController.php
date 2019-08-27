@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\BotWrapper;
 use Psr\Log\LoggerInterface;
 use Longman\TelegramBot\Telegram;
-use App\Repository\SettingRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Longman\TelegramBot\Exception\TelegramException;
@@ -15,22 +14,14 @@ class BotController extends AbstractController
 {
 
     /**
-     * Setting repo
-     *
-     * @var SettingRepository
-     */
-    protected $sr;
-
-    /**
      * Logger
      *
      * @var LoggerInterface
      */
     protected $logger;
 
-    public function __construct(SettingRepository $sr, LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger)
     {
-        $this->sr = $sr;
         $this->logger = $logger;
     }
     /**

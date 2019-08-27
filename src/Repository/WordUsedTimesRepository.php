@@ -19,9 +19,15 @@ class WordUsedTimesRepository extends ServiceEntityRepository
         parent::__construct($registry, WordUsedTimes::class);
     }
 
-    public function massIncrementUsage(string $text, int $chatId): void
+    /**
+     * Increases usage counter for many words for one chat.
+     *
+     * @param string $text
+     * @param integer $chatId
+     * @return void
+     */
+    public function massIncrementUsage(array $words, int $chatId): void
     {
-        $words = explode(" ", $text);
         $em = $this->getEntityManager();
         
         $query = "INSERT INTO word_used_times (telegram_id, word_text, used_times) VALUES ";
@@ -42,32 +48,41 @@ class WordUsedTimesRepository extends ServiceEntityRepository
         $stmt->execute($params);
     }
 
-    // /**
-    //  * @return WordUsedTimes[] Returns an array of WordUsedTimes objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * Find WordUsetTimes object in array representation.
+     * Sadly Doctrine does not support the ORM linking on non-primary keys ATM. (While Eloquent does)
+     *
+     * @param array $words
+     * @param integer $chat_id
+     * @return WordUsedTimes[]
+     */
+    public function findByWordsAndChatId(array $words, int $chat_id): array
     {
-        return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('w.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->createQueryBuilder("wc")
+                    ->select("wc.usedTimes, wc.wordText")
+                    ->where("wc.word IN(:wct)")
+                    ->setParameter("wct", $words)
+                    ->andWhere("wc.chat = :chatId")
+                    ->setParameter("chatId", $chat_id)
+                    ->getQuery()
+                    ->getResult();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?WordUsedTimes
+    /**
+     * Finds best words for one chat id.
+     *
+     * @param integer $chat_id
+     * @return WordUsedTimes[]
+     */
+    public function findBestByChatId(int $chat_id): array
     {
-        return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->createQueryBuilder("wc")
+                        ->select("wc.usedTimes, wc.wordText")
+                        ->andWhere("wc.chat = :chatId")
+                        ->setParameter("chatId", $chat_id)
+                        ->orderBy("wc.usedTimes", "DESC")
+                        ->setMaxResults(3)
+                        ->getQuery()
+                        ->getResult();
     }
-    */
 }

@@ -10,19 +10,24 @@
 
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
+use App\Entity\Word;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
+use App\Repository\ChatRepository;
+use App\Repository\WordRepository;
 use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Commands\UserCommand;
+use App\Repository\WordUsedTimesRepository;
+use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
- * Generic message command
+ * Help command
  *
- * Gets executed when any type of message is sent.
+ * Tells what to do
  */
-class HowmuchCommand extends UserCommand
+class HelpCommand extends SystemCommand
 {
+
     /**
      * Logger instance
      *
@@ -37,16 +42,21 @@ class HowmuchCommand extends UserCommand
         global $kernel;
         $this->logger = $kernel->getContainer()->get("logger.pub");
     }
-    
-    /**
-     * @var string
-     */
-    protected $name = 'howmuch';
 
     /**
      * @var string
      */
-    protected $description = 'Tell what most popular words are';
+    protected $name = 'help';
+
+    /**
+     * @var string
+     */
+    protected $usage = '/help';
+
+    /**
+     * @var string
+     */
+    protected $description = 'Sends help message';
 
     /**
      * @var string
@@ -66,21 +76,13 @@ class HowmuchCommand extends UserCommand
      */
     public function execute()
     {
-        $chat_id = $this->getMessage()->getChat()->id;
-        $text = $this->getMessage()->getText(true);
-
+        $this->logger->debug("Help message executed");
+        $chat_id = $this->getMessage()->getChat()->getId();
+        $text = "Available commands:\n<b>/count</b> - shows three top popular words in this chat\n<b>/count {word}</b> - shows popularity for the given word";
         Request::sendMessage([
-            'text' => 'huh!' . ($text ? " ({$text})" : ""),
-            'chat_id' => $chat_id
+            'parse_mode' => 'html',
+            'chat_id' => $chat_id,
+            'text' => $text
         ]);
-
-        $this->logger->debug("How much command executed");
-        
-        /**
-         * TODO:
-         *      - if no options given, tell three most used words by chat
-         *      - if the word is given, tell it's used times count
-         *
-         */
     }
 }

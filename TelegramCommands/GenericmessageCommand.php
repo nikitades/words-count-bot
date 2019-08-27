@@ -10,14 +10,15 @@
 
 namespace Longman\TelegramBot\Commands\SystemCommands;
 
+use App\Entity\Word;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
-use Longman\TelegramBot\Conversation;
-use Longman\TelegramBot\Entities\Update;
-use Longman\TelegramBot\Commands\SystemCommand;
 use App\Repository\ChatRepository;
 use App\Repository\WordRepository;
+use Longman\TelegramBot\Conversation;
+use Longman\TelegramBot\Entities\Update;
 use App\Repository\WordUsedTimesRepository;
+use Longman\TelegramBot\Commands\SystemCommand;
 
 /**
  * Generic message command
@@ -106,9 +107,11 @@ class GenericmessageCommand extends SystemCommand
         $tg_chat_id = $this->getMessage()->getChat()->getId();
         $tg_chat_title = $this->getMessage()->getChat()->getTitle();
         $text = $this->getMessage()->getText();
+        $words = explode(" ", $text);
+        $words = Word::escapeWords($words);
 
-        $this->wr->ensureWordsIDs($text);
+        $this->wr->ensureWordsIDs($words);
         $this->cr->ensureChatIsSaved($tg_chat_id, $tg_chat_title);
-        $this->wutr->massIncrementUsage($text, $tg_chat_id);
+        $this->wutr->massIncrementUsage($words, $tg_chat_id);
     }
 }

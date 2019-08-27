@@ -34,6 +34,11 @@ class WordUsedTimes
      */
     private $word;
 
+    /**
+     * @ORM\Column(type="string", length=500)
+     */
+    private $wordText;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -71,6 +76,18 @@ class WordUsedTimes
     public function setWord(?Word $word): self
     {
         $this->word = $word;
+
+        return $this;
+    }
+
+    public function getWordText(): ?string
+    {
+        return $this->wordText;
+    }
+
+    public function setWordText(string $wordText): self
+    {
+        $this->wordText = $wordText;
 
         return $this;
     }

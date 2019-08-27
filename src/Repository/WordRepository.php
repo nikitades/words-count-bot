@@ -25,10 +25,9 @@ class WordRepository extends ServiceEntityRepository
         //TODO: сделать увеличение использования
     }
 
-    public function ensureWordsIDs(string $text): void
+    public function ensureWordsIDs(array $words): void
     {
         $em = $this->getEntityManager();
-        $words = explode(" ", $text);
         $query = "INSERT INTO word (text) VALUES ";
         $valParams = array_map(function ($wordNumber) {
             return "(:w{$wordNumber})";
