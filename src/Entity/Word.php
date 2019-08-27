@@ -19,18 +19,19 @@ class Word
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=500)
+     * @ORM\Column(type="string", length=500, unique=true)
      */
     private $text;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Chat", mappedBy="words")
+     * @ORM\OneToMany(targetEntity="App\Entity\WordUsedTimes", mappedBy="word", orphanRemoval=true)
      */
-    private $chats;
+    private $wordUsedTimes;
 
     public function __construct()
     {
         $this->chats = new ArrayCollection();
+        $this->wordUsedTimes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -51,28 +52,31 @@ class Word
     }
 
     /**
-     * @return Collection|Chat[]
+     * @return Collection|WordUsedTimes[]
      */
-    public function getChats(): Collection
+    public function getWordUsedTimes(): Collection
     {
-        return $this->chats;
+        return $this->wordUsedTimes;
     }
 
-    public function addChat(Chat $chat): self
+    public function addWordUsedTime(WordUsedTimes $wordUsedTime): self
     {
-        if (!$this->chats->contains($chat)) {
-            $this->chats[] = $chat;
-            $chat->addWord($this);
+        if (!$this->wordUsedTimes->contains($wordUsedTime)) {
+            $this->wordUsedTimes[] = $wordUsedTime;
+            $wordUsedTime->setWord($this);
         }
 
         return $this;
     }
 
-    public function removeChat(Chat $chat): self
+    public function removeWordUsedTime(WordUsedTimes $wordUsedTime): self
     {
-        if ($this->chats->contains($chat)) {
-            $this->chats->removeElement($chat);
-            $chat->removeWord($this);
+        if ($this->wordUsedTimes->contains($wordUsedTime)) {
+            $this->wordUsedTimes->removeElement($wordUsedTime);
+            // set the owning side to null (unless already changed)
+            if ($wordUsedTime->getWord() === $this) {
+                $wordUsedTime->setWord(null);
+            }
         }
 
         return $this;

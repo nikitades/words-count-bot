@@ -27,5 +27,14 @@ services:
         alias: logger
         public: true
 
+    App\Repository\WordRepository:
+        public: true
+
+    App\Repository\ChatRepository:
+        public: true
+
+    App\Repository\WordUsedTimesRepository:
+        public: true
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

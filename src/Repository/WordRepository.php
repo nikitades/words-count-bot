@@ -2,9 +2,10 @@
 
 namespace App\Repository;
 
+use PDO;
 use App\Entity\Word;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Word|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +20,36 @@ class WordRepository extends ServiceEntityRepository
         parent::__construct($registry, Word::class);
     }
 
-    // /**
-    //  * @return Word[] Returns an array of Word objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function incrementUsage(string $word, int $chatId): void
     {
-        return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('w.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        //TODO: сделать увеличение использования
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Word
+    public function ensureWordsIDs(string $text): void
     {
-        return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $em = $this->getEntityManager();
+        $words = explode(" ", $text);
+        $query = "INSERT INTO word (text) VALUES ";
+        $valParams = array_map(function ($wordNumber) {
+            return "(:w{$wordNumber})";
+        }, array_keys($words));
+        $query .= implode(", ", $valParams);
+        $query .= " ON DUPLICATE KEY UPDATE id = id";
+        $params = [];
+        foreach ($words as $number => $word) {
+            $params["w{$number}"] = $word;
+        }
+        $stmt = $em->getConnection()->prepare($query);
+        $stmt->execute($params);
     }
-    */
+
+    public function getThreeForChat(int $chatId): ?array
+    {
+        //TODO: получать три наибольших по чату
+    }
+
+    public function getOneForChat(string $word, int $chatId): ?Word
+    {
+        //TODO: получать один указанный для чата
+    }
 }

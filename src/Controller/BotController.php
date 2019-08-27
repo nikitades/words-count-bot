@@ -21,9 +21,17 @@ class BotController extends AbstractController
      */
     protected $sr;
 
-    public function __construct(SettingRepository $sr)
+    /**
+     * Logger
+     *
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    public function __construct(SettingRepository $sr, LoggerInterface $logger)
     {
         $this->sr = $sr;
+        $this->logger = $logger;
     }
     /**
      * @Route("/bot/handler", name="webhookHandler")
@@ -37,13 +45,16 @@ class BotController extends AbstractController
         }
         
         try {
-            $botWrapper->run();
+            $result = $botWrapper->run();
         } catch (TelegramException $e) {
+            $this->logger->error("Bot error: " . $e->getMessage());
             return $this->json([
                 'status' => 'error',
                 'message' => $e->getMessage()
             ]);
         }
+
+        $this->logger->info("Bot was run");
         
         return $this->json([
             'status' => 'ok'

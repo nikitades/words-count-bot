@@ -15,6 +15,9 @@ use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Commands\SystemCommand;
+use App\Repository\ChatRepository;
+use App\Repository\WordRepository;
+use App\Repository\WordUsedTimesRepository;
 
 /**
  * Generic message command
@@ -31,12 +34,36 @@ class GenericmessageCommand extends SystemCommand
      */
     protected $logger;
 
+    /**
+     * Chat repo
+     *
+     * @var ChatRepository
+     */
+    protected $cr;
+
+    /**
+     * Words repo
+     *
+     * @var WordRepository
+     */
+    protected $wr;
+
+    /**
+     * Words usage repo
+     *
+     * @var WordUsedTimesRepository
+     */
+    protected $wutr;
+
     public function __construct(Telegram $tg, Update $update)
     {
         parent::__construct($tg, $update);
 
         global $kernel;
         $this->logger = $kernel->getContainer()->get("logger.pub");
+        $this->cr = $kernel->getContainer()->get("App\Repository\ChatRepository");
+        $this->wr = $kernel->getContainer()->get("App\Repository\WordRepository");
+        $this->wutr = $kernel->getContainer()->get("App\Repository\WordUsedTimesRepository");
     }
 
     /**
@@ -68,10 +95,20 @@ class GenericmessageCommand extends SystemCommand
     public function execute()
     {
         $this->logger->debug("Generic message executed");
-        /**
-         *  TODO:
-         *          -split the incoming message
-         *          -add the word by chat usage increment
-         * */
+
+        $chatType = $this->getMessage()->getChat()->getType();
+        
+        if (!in_array($chatType, ['group', 'supergroup'])) {
+            $this->logger->warning("Ignoring message from {$chatType}");
+            return;
+        }
+
+        $tg_chat_id = $this->getMessage()->getChat()->getId();
+        $tg_chat_title = $this->getMessage()->getChat()->getTitle();
+        $text = $this->getMessage()->getText();
+
+        $this->wr->ensureWordsIDs($text);
+        $this->cr->ensureChatIsSaved($tg_chat_id, $tg_chat_title);
+        $this->wutr->massIncrementUsage($text, $tg_chat_id);
     }
 }

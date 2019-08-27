@@ -19,6 +19,19 @@ class ChatRepository extends ServiceEntityRepository
         parent::__construct($registry, Chat::class);
     }
 
+    public function ensureChatIsSaved(int $tgChatId, string $chatTitle): void
+    {
+        $em = $this->getEntityManager();
+        $query = "INSERT INTO chat (name, telegram_id) VALUES (:name, :tgid) ON DUPLICATE KEY UPDATE name = :name2";
+        $params = [
+            'name' => $chatTitle,
+            'name2' => $chatTitle,
+            'tgid' => $tgChatId
+        ];
+        $stmt = $em->getConnection()->prepare($query);
+        $stmt->execute($params);
+    }
+
     // /**
     //  * @return Chat[] Returns an array of Chat objects
     //  */
