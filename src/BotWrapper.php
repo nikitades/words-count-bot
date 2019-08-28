@@ -26,7 +26,7 @@ class BotWrapper
     {
         $apiKey = $sr->get('token');
         $botName = $sr->get('botname');
-        if (!($apiKey || $botName)) {
+        if (!($apiKey && $botName)) {
             throw new \Exception("Both API key and Bot Name must be defined correctly (use bot:set-<...> to solve the issue)");
         }
         $this->client = new Telegram($apiKey->getValue(), $botName->getValue());

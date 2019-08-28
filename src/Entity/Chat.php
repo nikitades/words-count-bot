@@ -29,7 +29,7 @@ class Chat
     private $telegramId;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\WordUsedTimes", mappedBy="telegram_id", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\WordUsedTimes", mappedBy="chat", orphanRemoval=true)
      */
     private $wordUsedTimes;
 

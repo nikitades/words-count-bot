@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -86,7 +87,7 @@ class GenericmessageCommand extends SystemCommand
      * @var bool
      */
     protected $need_mysql = false;
-    
+
     /**
      * Command execute method
      *
@@ -98,7 +99,7 @@ class GenericmessageCommand extends SystemCommand
         $this->logger->debug("Generic message executed");
 
         $chatType = $this->getMessage()->getChat()->getType();
-        
+
         if (!in_array($chatType, ['group', 'supergroup'])) {
             $this->logger->warning("Ignoring message from {$chatType}");
             return;

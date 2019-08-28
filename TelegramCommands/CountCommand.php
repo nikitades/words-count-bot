@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the TelegramBot package.
  *
@@ -47,7 +48,7 @@ class CountCommand extends UserCommand
         $this->logger = $kernel->getContainer()->get("logger.pub");
         $this->wutr = $kernel->getContainer()->get("App\Repository\WordUsedTimesRepository");
     }
-    
+
     /**
      * @var string
      */
@@ -67,7 +68,7 @@ class CountCommand extends UserCommand
      * @var bool
      */
     protected $need_mysql = false;
-    
+
     /**
      * Command execute method
      *
@@ -94,11 +95,11 @@ class CountCommand extends UserCommand
         $resposeText = [];
         foreach ($words as $word) {
             $usedTimes = array_filter($wordsCount, function ($wcItem) use ($word) {
-                return $wcItem['wordText'] == $word;
+                return $wcItem->getWord()->getText() == $word;
             });
             if (count($usedTimes)) {
                 $wcItem = array_shift($usedTimes);
-                $resposeText[] = "<b>{$word}</b>: " . $wcItem['usedTimes'];
+                $resposeText[] = "<b>{$word}</b>: " . $wcItem->getUsedTimes();
             } else {
                 $resposeText[] = "<b>{$word}</b>: 0";
             }
@@ -107,7 +108,7 @@ class CountCommand extends UserCommand
         Request::sendMessage([
             'parse_mode' => 'html',
             'chat_id' => $chat_id,
-            'text' => implode("\n", $resposeText) 
+            'text' => implode("\n", $resposeText)
         ]);
     }
 
@@ -115,15 +116,24 @@ class CountCommand extends UserCommand
     {
         $wordsCount = $this->wutr->findBestByChatId($chat_id);
         $resposeText = [];
-        
+
+        if (empty($wordsCount)) {
+            Request::sendMessage([
+                'parse_mode' => 'html',
+                'chat_id' => $chat_id,
+                'text' => "<i>No statistics found</i>"
+            ]);
+            return;
+        }
+
         foreach ($wordsCount as $wcItem) {
-            $resposeText[] = "<b>{$wcItem['wordText']}</b>: " . $wcItem['usedTimes'];
+            $resposeText[] = "<b>{$wcItem->getWord()->getText()}</b>: " . $wcItem->getUsedTimes();
         }
 
         Request::sendMessage([
             'parse_mode' => 'html',
             'chat_id' => $chat_id,
-            'text' => implode("\n", $resposeText) 
+            'text' => implode("\n", $resposeText)
         ]);
     }
 }

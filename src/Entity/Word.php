@@ -24,7 +24,7 @@ class Word
     private $text;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\WordUsedTimes", mappedBy="word_text", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\WordUsedTimes", mappedBy="word", orphanRemoval=true)
      */
     private $wordUsedTimes;
 
@@ -49,6 +49,32 @@ class Word
         $this->text = $text;
 
         return $this;
+    }
+
+    /**
+     * Escapes the single word
+     *
+     * @param string $word
+     * @return string
+     */
+    public static function escapeWord(string $word): string
+    {
+        $word = preg_replace("/\W/", "", $word);
+        return strtolower($word);
+    }
+
+    /**
+     * Escapes the array of words
+     *
+     * @param array $words
+     * @return array
+     */
+    public static function escapeWords(array $words): array
+    {
+        foreach ($words as &$word) {
+            $word = self::escapeWord($word);
+        }
+        return $words;
     }
 
     /**
@@ -80,31 +106,5 @@ class Word
         }
 
         return $this;
-    }
-
-    /**
-     * Escapes the single word
-     *
-     * @param string $word
-     * @return string
-     */
-    public static function escapeWord(string $word): string
-    {
-        $word = preg_replace("/\W/", "", $word);
-        return strtolower($word);
-    }
-
-    /**
-     * Escapes the array of words
-     *
-     * @param array $words
-     * @return array
-     */
-    public static function escapeWords(array $words): array
-    {
-        foreach ($words as &$word) {
-            $word = self::escapeWord($word);
-        }
-        return $words;
     }
 }

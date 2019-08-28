@@ -29,21 +29,23 @@ class WordUsedTimesRepository extends ServiceEntityRepository
     public function massIncrementUsage(array $words, int $chatId): void
     {
         $em = $this->getEntityManager();
-        
-        $query = "INSERT INTO word_used_times (telegram_id, word_text, used_times) VALUES ";
-        $values = array_map(function ($number) {
-            return "(:c, :w{$number}, 1)";
-        }, array_keys($words));
-        $query .= implode(", ", $values);
-        $query .= " ON DUPLICATE KEY UPDATE used_times = used_times + 1";
 
+        $wordsInQuery = array_map(function ($number) {
+            return ":w{$number}";
+        }, array_keys($words));
+
+        $query = "INSERT INTO word_used_times (used_times, chat_id, word_id) 
+                    SELECT 1, c.id, w.id 
+                        FROM word w
+                        LEFT JOIN chat c ON c.telegram_id = :tgid
+                        WHERE w.text IN(" . implode(", ", $wordsInQuery) . ")
+                    ON DUPLICATE KEY UPDATE used_times = used_times + 1";
         $params = [
-            'c' => $chatId
+            'tgid' => $chatId
         ];
         foreach ($words as $number => $word) {
             $params["w{$number}"] = $word;
         }
-        
         $stmt = $em->getConnection()->prepare($query);
         $stmt->execute($params);
     }
@@ -58,14 +60,18 @@ class WordUsedTimesRepository extends ServiceEntityRepository
      */
     public function findByWordsAndChatId(array $words, int $chat_id): array
     {
-        return $this->createQueryBuilder("wc")
-                    ->select("wc.usedTimes, wc.wordText")
-                    ->where("wc.word IN(:wct)")
-                    ->setParameter("wct", $words)
-                    ->andWhere("wc.chat = :chatId")
-                    ->setParameter("chatId", $chat_id)
-                    ->getQuery()
-                    ->getResult();
+        return $this->getEntityManager()
+            ->createQuery("
+                            SELECT wu, word, chat
+                            FROM App\Entity\WordUsedTimes wu
+                            LEFT JOIN wu.word word
+                            LEFT JOIN wu.chat chat
+                            WHERE word.text IN(:wt)
+                            AND chat.telegramId = :tgid
+                        ")
+            ->setParameter('wt', $words)
+            ->setParameter('tgid', $chat_id)
+            ->getResult();
     }
 
     /**
@@ -76,13 +82,17 @@ class WordUsedTimesRepository extends ServiceEntityRepository
      */
     public function findBestByChatId(int $chat_id): array
     {
-        return $this->createQueryBuilder("wc")
-                        ->select("wc.usedTimes, wc.wordText")
-                        ->andWhere("wc.chat = :chatId")
-                        ->setParameter("chatId", $chat_id)
-                        ->orderBy("wc.usedTimes", "DESC")
-                        ->setMaxResults(3)
-                        ->getQuery()
-                        ->getResult();
+        return $this->getEntityManager()
+            ->createQuery("
+                            SELECT wu, word, chat
+                            FROM App\Entity\WordUsedTimes wu
+                            LEFT JOIN wu.word word
+                            LEFT JOIN wu.chat chat
+                            WHERE chat.telegramId = :tgid
+                            ORDER BY wu.usedTimes DESC
+                        ")
+            ->setMaxResults(3)
+            ->setParameter('tgid', $chat_id)
+            ->getResult();
     }
 }
