@@ -27,6 +27,9 @@ services:
         alias: logger
         public: true
 
+    App\Repository\SettingRepository:
+        public: true
+
     App\Repository\WordRepository:
         public: true
 

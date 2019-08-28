@@ -20,11 +20,6 @@ class WordRepository extends ServiceEntityRepository
         parent::__construct($registry, Word::class);
     }
 
-    public function incrementUsage(string $word, int $chatId): void
-    {
-        //TODO: сделать увеличение использования
-    }
-
     public function ensureWordsIDs(array $words): void
     {
         $em = $this->getEntityManager();
@@ -39,15 +34,5 @@ class WordRepository extends ServiceEntityRepository
         }
         $stmt = $em->getConnection()->prepare($query);
         $stmt->execute($params);
-    }
-
-    public function getThreeForChat(int $chatId): ?array
-    {
-        //TODO: получать три наибольших по чату
-    }
-
-    public function getOneForChat(string $word, int $chatId): ?Word
-    {
-        //TODO: получать один указанный для чата
     }
 }

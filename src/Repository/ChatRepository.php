@@ -32,6 +32,24 @@ class ChatRepository extends ServiceEntityRepository
         $stmt->execute($params);
     }
 
+    public function removeByTgId(int $tgChatId): void
+    {
+        $this->createQueryBuilder('c')
+            ->andWhere('c.telegramId = :tgid')
+            ->setParameter('tgid', $tgChatId)
+            ->delete();
+    }
+
+    public function findByTgId(int $tgChatId): ?Chat
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.telegramId = :tgid')
+            ->setParameter('tgid', $tgChatId)
+            ->getQuery()
+            ->getResult();
+    }
+
+
     // /**
     //  * @return Chat[] Returns an array of Chat objects
     //  */
