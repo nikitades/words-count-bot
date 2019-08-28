@@ -28,12 +28,11 @@ class WordRepository extends ServiceEntityRepository
     public function ensureWordsIDs(array $words): void
     {
         $em = $this->getEntityManager();
-        $query = "INSERT INTO word (text) VALUES ";
+        $query = "INSERT IGNORE INTO word (text) VALUES ";
         $valParams = array_map(function ($wordNumber) {
             return "(:w{$wordNumber})";
         }, array_keys($words));
         $query .= implode(", ", $valParams);
-        $query .= " ON DUPLICATE KEY UPDATE id = id";
         $params = [];
         foreach ($words as $number => $word) {
             $params["w{$number}"] = $word;
