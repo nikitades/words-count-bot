@@ -61,7 +61,7 @@ class Word
     {
         $word = mb_ereg_replace("/[^\wА-Яа-я]/", " ", $word);
         $word = trim($word);
-        return strtolower($word);
+        return mb_strtolower($word);
     }
 
     /**

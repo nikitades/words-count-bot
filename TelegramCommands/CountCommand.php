@@ -104,6 +104,15 @@ class CountCommand extends UserCommand
                 $resposeText[] = "<b>{$word}</b>: 0";
             }
         }
+        
+        if (empty($resposeText)) {
+            Request::sendMessage([
+                'parse_mode' => 'html',
+                'chat_id' => $chat_id,
+                'text' => "<b>{$text}</b>: 0"
+            ]);
+            return;    
+        }
 
         Request::sendMessage([
             'parse_mode' => 'html',
