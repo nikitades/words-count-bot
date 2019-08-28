@@ -59,7 +59,8 @@ class Word
      */
     public static function escapeWord(string $word): string
     {
-        $word = preg_replace("/\W/", "", $word);
+        $word = preg_replace("/\W/", " ", $word);
+        $word = trim($word);
         return strtolower($word);
     }
 

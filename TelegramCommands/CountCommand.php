@@ -89,8 +89,8 @@ class CountCommand extends UserCommand
 
     private function getParticularWordsCount(string $text, int $chat_id): void
     {
+        $text = Word::escapeWord($text);
         $words = explode(" ", $text);
-        $words = Word::escapeWords($words);
         $wordsCount = $this->wutr->findByWordsAndChatId($words, $chat_id);
         $resposeText = [];
         foreach ($words as $word) {
