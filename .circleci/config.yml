@@ -39,9 +39,14 @@ jobs:
     - run: sed -i.bak "s/${MYSQL_HOST}/${MYSQL_REMOTE_HOST}/g" .env
     - run: composer dump-env $APP_MODE
     - run: bin/console doctrine:migration:migrate --no-interaction
-  # test:
-  #   docker:
-  #     - image: circleci/php:7.3.8-stretch
+  test:
+    docker:
+      - image: circleci/php:7.3.8-stretch
+    steps:
+      - attach_workspace:
+          at: .
+      - run: composer dump-env test
+      - run: bin/phpunit
   deploy:
     docker:
       - image: circleci/buildpack-deps:buster
@@ -69,9 +74,12 @@ workflows:
   build_and_deploy:
     jobs:
       - build
+      - test:
+          requires:
+            - build
       - migrate:
           requires:
-            - build
+            - test
       - deploy:
           requires:
-            - build
+            - test
