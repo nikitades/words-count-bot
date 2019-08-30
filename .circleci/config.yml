@@ -46,6 +46,7 @@ jobs:
       - attach_workspace:
           at: .
       - run: composer dump-env test
+      - run: docker-php-ext-install pdo pdo_mysql mysqli
       - run: bin/phpunit
   deploy:
     docker:
