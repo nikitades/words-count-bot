@@ -94,7 +94,7 @@ class GenericmessageCommand extends SystemCommand
      * @return \Longman\TelegramBot\Entities\ServerResponse
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
-    public function execute()
+    public function execute(): void
     {
         $this->logger->debug("Generic message executed");
 

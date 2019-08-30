@@ -2,25 +2,24 @@
 
 namespace App\Tests;
 
-use Symfony\Bundle\FrameworkBundle\Console\Application;
+use App\Entity\Setting;
+use App\Repository\SettingRepository;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 
-class CommandsTest extends WebTestCase
+class BotCommandsTest extends WebTestCase
 {
     public function testSetToken()
     {
         self::bootKernel();
         $application = new Application(self::$kernel);
-
         $container = self::$kernel->getContainer();
-        $originalTokenSetting = $container->get("App\Repository\SettingRepository")->get('token');
-        $originalToken = null;
-        if (!empty($originalTokenSetting)) {
-            $originalToken = $originalTokenSetting->getValue();
-        }
-
-        //TODO: Mock repositories
+        $settingRepository = $this->createMock(SettingRepository::class);
+        $settingRepository->method('get')->willReturn(new Setting("token", "123"));
+        $settingRepository->method('setOrCreate')->willReturn(new Setting("token", "123"));
+        $settingRepository->method('delete')->willReturn(null);
+        $container->set(SettingRepository::class, $settingRepository);
 
         $setCommand = $application->find('bot:set-token');
         $checkCommand = $application->find('bot:check-token');
@@ -39,25 +38,25 @@ class CommandsTest extends WebTestCase
 
         $output = $checkCommandTester->getDisplay();
         $this->assertContains('123', $output);
-
-        if (!empty($originalToken)) {
-            $container->get("App\Repository\SettingRepository")->setOrCreate('token', $originalToken);
-        }
     }
 
     public function testFlushToken()
     {
         self::bootKernel();
         $application = new Application(self::$kernel);
-
         $container = self::$kernel->getContainer();
-        $originalTokenSetting = $container->get("App\Repository\SettingRepository")->get('token');
-        $originalToken = null;
-        if (!empty($originalTokenSetting)) {
-            $originalToken = $originalTokenSetting->getValue();
-        }
-
-        //TODO: Mock repositories
+        $settingRepository = $this->createMock(SettingRepository::class);
+        $settingRepository
+            ->expects($this->at(1))
+            ->method('get')
+            ->willReturn(new Setting("token", "123"));
+        $settingRepository
+            ->expects($this->at(2))
+            ->method('get')
+            ->willReturn(null);
+        $settingRepository->method('setOrCreate')->willReturn(new Setting("token", "123"));
+        $settingRepository->method('delete')->willReturn(null);
+        $container->set(SettingRepository::class, $settingRepository);
 
         $setCommand = $application->find('bot:set-token');
         $flushCommand = $application->find('bot:flush-token');
@@ -89,9 +88,5 @@ class CommandsTest extends WebTestCase
         ]);
         $secondCheckOutput = $checkCommandTester->getDisplay();
         $this->assertContains('No token found!', $secondCheckOutput);
-
-        if (!empty($originalToken)) {
-            $container->get("App\Repository\SettingRepository")->setOrCreate('token', $originalToken);
-        }
     }
 }

@@ -18,6 +18,7 @@ use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Update;
 use App\Repository\WordUsedTimesRepository;
 use Longman\TelegramBot\Commands\UserCommand;
+use Longman\TelegramBot\Entities\ServerResponse;
 
 /**
  * Count the word command
@@ -87,7 +88,7 @@ class CountCommand extends UserCommand
         return $this->getTopThreeWordsCount($chat_id);
     }
 
-    private function getParticularWordsCount(string $text, int $chat_id): void
+    private function getParticularWordsCount(string $text, int $chat_id): ServerResponse
     {
         $text = Word::escapeWord($text);
         $words = explode(" ", $text);
@@ -104,42 +105,40 @@ class CountCommand extends UserCommand
                 $resposeText[] = "<b>{$word}</b>: 0";
             }
         }
-        
+
         if (empty($resposeText)) {
-            Request::sendMessage([
+            return Request::sendMessage([
                 'parse_mode' => 'html',
                 'chat_id' => $chat_id,
                 'text' => "<b>{$text}</b>: 0"
             ]);
-            return;    
         }
 
-        Request::sendMessage([
+        return Request::sendMessage([
             'parse_mode' => 'html',
             'chat_id' => $chat_id,
             'text' => implode("\n", $resposeText)
         ]);
     }
 
-    private function getTopThreeWordsCount(int $chat_id): void
+    private function getTopThreeWordsCount(int $chat_id): ServerResponse
     {
         $wordsCount = $this->wutr->findBestByChatId($chat_id);
         $resposeText = [];
 
         if (empty($wordsCount)) {
-            Request::sendMessage([
+            return Request::sendMessage([
                 'parse_mode' => 'html',
                 'chat_id' => $chat_id,
                 'text' => "<i>No statistics found</i>"
             ]);
-            return;
         }
 
         foreach ($wordsCount as $wcItem) {
             $resposeText[] = "<b>{$wcItem->getWord()->getText()}</b>: " . $wcItem->getUsedTimes();
         }
 
-        Request::sendMessage([
+        return Request::sendMessage([
             'parse_mode' => 'html',
             'chat_id' => $chat_id,
             'text' => implode("\n", $resposeText)
