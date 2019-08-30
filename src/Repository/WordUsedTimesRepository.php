@@ -51,8 +51,7 @@ class WordUsedTimesRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find WordUsetTimes object in array representation.
-     * Sadly Doctrine does not support the ORM linking on non-primary keys ATM. (While Eloquent does)
+     * Finds array of WordUsetTimes 
      *
      * @param array $words
      * @param integer $chat_id
