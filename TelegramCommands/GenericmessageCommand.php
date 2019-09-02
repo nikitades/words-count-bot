@@ -110,6 +110,7 @@ class GenericmessageCommand extends SystemCommand
         $text = $this->getMessage()->getText();
         $text = Word::escapeWord($text);
         $words = explode(" ", $text);
+        $words = Word::ensureWordsAllowed($words);
 
         $this->wr->ensureWordsIDs($words);
         $this->cr->ensureChatIsSaved($tg_chat_id, $tg_chat_title);

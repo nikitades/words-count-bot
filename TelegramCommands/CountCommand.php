@@ -92,6 +92,7 @@ class CountCommand extends UserCommand
     {
         $text = Word::escapeWord($text);
         $words = explode(" ", $text);
+        $words = Word::ensureWordsAllowed($words);
         $wordsCount = $this->wutr->findByWordsAndChatId($words, $chat_id);
         $resposeText = [];
         foreach ($words as $word) {

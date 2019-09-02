@@ -65,6 +65,20 @@ class Word
     }
 
     /**
+     * Removes the unallowed words from the given array
+     *
+     * @param array $words
+     * @return array
+     */
+    public static function ensureWordsAllowed(array $words): array
+    {
+        return array_filter($words, function ($word) {
+            if (strlen($word) < 3) return false;
+            return true;
+        });
+    }
+
+    /**
      * Escapes the array of words
      *
      * @param array $words
