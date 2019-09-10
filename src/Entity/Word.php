@@ -60,6 +60,7 @@ class Word
     public static function escapeWord(string $word): string
     {
         $word = mb_ereg_replace("[^A-Za-zА-Яа-я\-\']", " ", $word);
+        $word = mb_ereg_replace("\W{2,}", " ", $word);
         $word = trim($word);
         return mb_strtolower($word);
     }
