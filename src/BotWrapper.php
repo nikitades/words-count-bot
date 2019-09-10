@@ -33,6 +33,12 @@ class BotWrapper
         $this->logger = $logger;
     }
 
+    /**
+     * Makes the bot interpret the incoming request object.
+     * Must be called in the controller method assigned to be the webhook endpoint.
+     *
+     * @return void
+     */
     public function run()
     {
         $this->client->addCommandsPath(__DIR__ . "/../TelegramCommands");

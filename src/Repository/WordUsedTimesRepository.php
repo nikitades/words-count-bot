@@ -20,7 +20,7 @@ class WordUsedTimesRepository extends ServiceEntityRepository
     }
 
     /**
-     * Increases usage counter for many words for one chat.
+     * Increases usage counter for many words for one chat
      *
      * @param string $text
      * @param integer $chatId

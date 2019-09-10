@@ -88,6 +88,13 @@ class CountCommand extends UserCommand
         return $this->getTopThreeWordsCount($chat_id);
     }
 
+    /**
+     * Tells how much times the given words were used
+     *
+     * @param string $text
+     * @param integer $chat_id
+     * @return ServerResponse
+     */
     private function getParticularWordsCount(string $text, int $chat_id): ServerResponse
     {
         $text = Word::escapeWord($text);
@@ -122,6 +129,12 @@ class CountCommand extends UserCommand
         ]);
     }
 
+    /**
+     * Tells what are three (or less) top-used words of the chat
+     *
+     * @param integer $chat_id
+     * @return ServerResponse
+     */
     private function getTopThreeWordsCount(int $chat_id): ServerResponse
     {
         $wordsCount = $this->wutr->findBestByChatId($chat_id);

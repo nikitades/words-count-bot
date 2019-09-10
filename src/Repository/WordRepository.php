@@ -20,6 +20,12 @@ class WordRepository extends ServiceEntityRepository
         parent::__construct($registry, Word::class);
     }
 
+    /**
+     * Saves words if not saved yet
+     *
+     * @param array $words
+     * @return void
+     */
     public function ensureWordsIDs(array $words): void
     {
         $em = $this->getEntityManager();

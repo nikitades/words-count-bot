@@ -19,6 +19,13 @@ class ChatRepository extends ServiceEntityRepository
         parent::__construct($registry, Chat::class);
     }
 
+    /**
+     * Saves the chat if not saved yet
+     *
+     * @param integer $tgChatId
+     * @param string $chatTitle
+     * @return void
+     */
     public function ensureChatIsSaved(int $tgChatId, string $chatTitle): void
     {
         $em = $this->getEntityManager();
@@ -32,6 +39,12 @@ class ChatRepository extends ServiceEntityRepository
         $stmt->execute($params);
     }
 
+    /**
+     * Removes the chat by its telegram ID
+     *
+     * @param integer $tgChatId
+     * @return void
+     */
     public function removeByTgId(int $tgChatId): void
     {
         $this->createQueryBuilder('c')
@@ -40,6 +53,12 @@ class ChatRepository extends ServiceEntityRepository
             ->delete();
     }
 
+    /**
+     * Finds the chat by its telegram ID
+     *
+     * @param integer $tgChatId
+     * @return Chat|null
+     */
     public function findByTgId(int $tgChatId): ?Chat
     {
         return $this->createQueryBuilder('c')
@@ -48,34 +67,4 @@ class ChatRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
-
-    // /**
-    //  * @return Chat[] Returns an array of Chat objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Chat
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

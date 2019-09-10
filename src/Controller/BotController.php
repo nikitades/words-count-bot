@@ -24,6 +24,7 @@ class BotController extends AbstractController
     {
         $this->logger = $logger;
     }
+    
     /**
      * @Route("/bot/handler", name="webhookHandler")
      */
