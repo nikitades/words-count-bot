@@ -41,7 +41,13 @@ class BotSetWebhookCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $wh = $input->getArgument('webhook');
-        $apiKey = $this->sr->get('token')->getValue();
+        try {
+            $apiKey = $this->sr->get('token')->getValue();
+        } catch (\Error $e) {
+            $io->error("ERROR: The token must be set first");
+            $io->warning($e->getMessage());
+            return;
+        }
         $botName = $input->getOption('botname');
 
         try {

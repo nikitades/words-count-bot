@@ -98,8 +98,9 @@ class CountCommand extends UserCommand
     private function getParticularWordsCount(string $text, int $chat_id): ServerResponse
     {
         $text = Word::escapeWord($text);
-        $words = explode(" ", $text);
-        $words = Word::ensureWordsAllowed($words);
+        $sourceWords = explode(" ", $text);
+        $words = Word::ensureWordsAllowed($sourceWords);
+        $shortWords = array_diff($sourceWords, $words);
         $wordsCount = $this->wutr->findByWordsAndChatId($words, $chat_id);
         $resposeText = [];
         foreach ($words as $word) {
@@ -110,15 +111,19 @@ class CountCommand extends UserCommand
                 $wcItem = array_shift($usedTimes);
                 $resposeText[] = "<b>{$word}</b>: " . $wcItem->getUsedTimes();
             } else {
-                $resposeText[] = "<b>{$word}</b>: 0";
+                $resposeText[] = "<b>{$word}</b>: not found";
             }
+        }
+
+        foreach ($shortWords as $word) {
+            $resposeText[] = "<b>{$word}</b>: too short";
         }
 
         if (empty($resposeText)) {
             return Request::sendMessage([
                 'parse_mode' => 'html',
                 'chat_id' => $chat_id,
-                'text' => "<b>{$text}</b>: 0"
+                'text' => "<b>{$text}</b>: not found"
             ]);
         }
 

@@ -5,6 +5,7 @@ namespace App;
 use Psr\Log\LoggerInterface;
 use Longman\TelegramBot\Telegram;
 use App\Repository\SettingRepository;
+use PHPUnit\Runner\Exception;
 
 class BotWrapper
 {
@@ -26,8 +27,11 @@ class BotWrapper
     {
         $apiKey = $sr->get('token');
         $botName = $sr->get('botname');
-        if (!($apiKey && $botName)) {
-            throw new \Exception("Both API key and Bot Name must be defined correctly (use bot:set-<...> to solve the issue)");
+        if (!$apiKey) {
+            throw new \Exception("API Key is incorrect");
+        }
+        if (!$botName) {
+            throw new \Exception("Bot Name is incorrect");
         }
         $this->client = new Telegram($apiKey->getValue(), $botName->getValue());
         $this->logger = $logger;
