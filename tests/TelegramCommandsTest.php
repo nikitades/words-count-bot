@@ -63,7 +63,7 @@ class TelegramCommandsTest extends WebTestCase
         $countCommand = new CountCommand($telegram, $tgUpdate);
         $result = $countCommand->execute();
         $messageText = $result->getResult()->getText();
-        $this->assertEquals($messageText, "<b>kek</b>: 0");
+        $this->assertEquals($messageText, "<b>kek</b>: not found");
 
         //the best words
         $tgUpdate = new Update([
