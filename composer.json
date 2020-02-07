@@ -18,7 +18,7 @@
     "require-dev": {
         "symfony/browser-kit": "4.3.*",
         "symfony/css-selector": "4.3.*",
-        "symfony/maker-bundle": "^1.12",
+        "symfony/maker-bundle": "^1.14",
         "symfony/phpunit-bridge": "^4.3"
     },
     "config": {

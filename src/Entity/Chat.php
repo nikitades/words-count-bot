@@ -24,14 +24,14 @@ class Chat
     private $name;
 
     /**
-     * @ORM\Column(type="integer", unique=true)
-     */
-    private $telegramId;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\WordUsedTimes", mappedBy="chat", orphanRemoval=true)
      */
     private $wordUsedTimes;
+
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $telegramId;
 
     public function __construct()
     {
@@ -52,18 +52,6 @@ class Chat
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getTelegramId(): ?int
-    {
-        return $this->telegramId;
-    }
-
-    public function setTelegramId(int $telegramId): self
-    {
-        $this->telegramId = $telegramId;
 
         return $this;
     }
@@ -95,6 +83,18 @@ class Chat
                 $wordUsedTime->setChat(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTelegramId(): ?string
+    {
+        return $this->telegramId;
+    }
+
+    public function setTelegramId(string $telegramId): self
+    {
+        $this->telegramId = $telegramId;
 
         return $this;
     }
