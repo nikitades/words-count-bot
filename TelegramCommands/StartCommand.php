@@ -5,16 +5,16 @@ namespace Longman\TelegramBot\Commands\SystemCommands;
 use App\Entity\Word;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
+use Longman\TelegramBot\Conversation;
 use Longman\TelegramBot\Entities\Update;
 use App\Repository\WordUsedTimesRepository;
 use Longman\TelegramBot\Commands\UserCommand;
+use Longman\TelegramBot\Entities\ServerResponse;
 
 /**
- * Unknown command
- *
- * A fail safe command
+ * Greets a man
  */
-class GenericCommand extends UserCommand
+class StartCommand extends UserCommand
 {
     /**
      * Logger instance
@@ -36,18 +36,17 @@ class GenericCommand extends UserCommand
 
         global $kernel;
         $this->logger = $kernel->getContainer()->get("logger.pub");
-        $this->wutr = $kernel->getContainer()->get("App\Repository\WordUsedTimesRepository");
     }
 
     /**
      * @var string
      */
-    protected $name = 'generic';
+    protected $name = 'start';
 
     /**
      * @var string
      */
-    protected $description = 'Unknown command';
+    protected $description = 'Greets the user';
 
     /**
      * @var string
@@ -67,13 +66,13 @@ class GenericCommand extends UserCommand
      */
     public function execute()
     {
-        $this->logger->debug("Unknown command executed");
+        $this->logger->debug("Start command executed");
         $message = $this->getMessage();
         $chat_id = $message->getChat()->getId();
         return Request::sendMessage([
             'parse_mode' => 'html',
             'chat_id' => $chat_id,
-            'text' => "Unsupported command: <b>$message->getCommand()</b>"
+            'text' => "Usage: /count <your word>"
         ]);
     }
 }
