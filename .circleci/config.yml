@@ -15,8 +15,8 @@ jobs:
       - run: sed -i.bak "s/{db_host}/${MYSQL_HOST}/g" .env
       - run: sed -i.bak "s/{db_port}/${MYSQL_PORT}/g" .env
       - run: sed -i.bak "s/{db_name}/${MYSQL_DBNAME}/g" .env
-      - run: composer dump-env $APP_MODE
       - run: composer install -n --prefer-dist
+      - run: composer dump-env $APP_MODE
       - run: sed -i.bak "s/{http_port}/${HTTP_PORT}/g" docker-compose.prod.yml
       - run: sed -i.bak "s/{mysql_root_pwd}/${MYSQL_ROOT_PWD}/g" docker-compose.prod.yml
       - run: sed -i.bak "s/{mysql_user}/${MYSQL_USER}/g" docker-compose.prod.yml
