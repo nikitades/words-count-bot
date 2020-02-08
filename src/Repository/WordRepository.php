@@ -28,7 +28,6 @@ class WordRepository extends ServiceEntityRepository
      */
     public function ensureWordsIDs(array $words): void
     {
-        if (empty($words)) return;
         $em = $this->getEntityManager();
         $query = "INSERT IGNORE INTO word (text) VALUES ";
         $valParams = array_map(function ($wordNumber) {

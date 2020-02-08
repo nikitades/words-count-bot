@@ -101,6 +101,7 @@ class GenericmessageCommand extends SystemCommand
         $text = $this->getMessage()->getText();
 
         if (empty(trim($text))) {
+            $this->logger->info("A message seemed empty: " . $text);
             return;
         }
         $text = Word::escapeWord($text);
