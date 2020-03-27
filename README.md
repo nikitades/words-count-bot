@@ -2,7 +2,7 @@
 
 ### The goal
 
-I stated this project to get get used to Symfony framework. The idea is rather simple - to make a bot telling how many times a word was used in certain chat.
+I stated this project to get used to Symfony framework. The idea is rather simple - to create a bot telling how many times a word was used in certain chat.
 
 - - -
 
