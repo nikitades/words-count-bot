@@ -28,6 +28,9 @@ class WordUsedTimesRepository extends ServiceEntityRepository
      */
     public function massIncrementUsage(array $words, int $chatId): void
     {
+        if (empty($words)) {
+            return;
+        }
         $em = $this->getEntityManager();
 
         $wordsInQuery = array_map(function ($number) {
@@ -51,7 +54,7 @@ class WordUsedTimesRepository extends ServiceEntityRepository
     }
 
     /**
-     * Finds array of WordUsetTimes 
+     * Finds array of WordUsetTimes
      *
      * @param array $words
      * @param integer $chat_id
