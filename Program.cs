@@ -31,6 +31,8 @@ builder.Services
 
 var app = builder.Build();
 
+app.Services.GetRequiredService<WordContext>().Database.Migrate();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

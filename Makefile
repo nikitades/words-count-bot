@@ -3,14 +3,16 @@
 
 .DEFAULT_GOAL := build
 
-build: build_amd64 prune
-build_dev: build_amd64
+build: buildx_install build_amd64 prune
+build_dev: buildx_install build_amd64
+
+buildx_install:
+	docker run --privileged --rm tonistiigi/binfmt --install all
 
 build_amd64: build_dotnet
 
 build_dotnet:
-	docker build -t nikitades/wordscountbot-app:latest -f Dockerfile .
-	docker push nikitades/wordscountbot-app
+	docker buildx build -t nikitades/wordscountbot-app:latest -f Dockerfile --platform linux/amd64 --push .
 
 prune:
 	docker system prune -af
