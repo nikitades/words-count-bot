@@ -1,6 +1,7 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot.Types;
-using WordsCountBot.Domain;
+using WordsCountBot.Application.Command.HandleUpdate;
 
 namespace WordsCountBot.Application.Controllers;
 
@@ -8,30 +9,23 @@ namespace WordsCountBot.Application.Controllers;
 [Route("[controller]")]
 public class WebhookController : ControllerBase
 {
-    private readonly ILogger<WebhookController> _logger;
-    private readonly IWordRepository _wordRepository;
+    private readonly IMediator _mediator;
 
-    public WebhookController(
-        ILogger<WebhookController> logger,
-        IWordRepository wordRepository
-    )
+    public WebhookController(IMediator mediator)
     {
-        _logger = logger;
-        _wordRepository = wordRepository;
+        _mediator = mediator;
     }
 
     [HttpPost("/api/webhook")]
-    public string Get([FromBody] Update update)
+    public async Task<IActionResult> Get([FromBody] Update update)
     {
-        _logger.Log(LogLevel.Information, "Hello");
-        return "ok";
+        await _mediator.Send(new HandleUpdateCommand(update));
+        return Ok("ok");
     }
 
     [HttpGet("/api/ping")]
-    public async Task<string> PingAsync()
+    public IActionResult PingAsync()
     {
-        var i = await _wordRepository.GetUsagesCount("merhaba");
-        _logger.Log(LogLevel.Information, $"ping {i}");
-        return "pong";
+        return Ok("pong");
     }
 }

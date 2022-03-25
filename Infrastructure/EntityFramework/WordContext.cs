@@ -6,11 +6,10 @@ namespace WordsCountBot.Infrastructure.EntityFramework;
 
 public class WordContext : DbContext
 {
-    public DbSet<Word> Words { get; set; }
+    public DbSet<Word> Words { get; set; } = default!;
 
     public WordContext(DbContextOptions options) : base(options)
     {
-        this.Database.EnsureCreated();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
