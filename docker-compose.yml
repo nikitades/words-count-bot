@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  app:
+    image: nikitades/wordscountbot-app
+    ports:
+      - "8084:5936"
+    depends_on:
+      - db
+  db:
+    image: mysql:latest
+    volumes:
+      - ./db:/var/lib/mysql
+    ports: 
+      - 3306:3306
+    environment: 
+      MYSQL_ROOT_PASSWORD: wcbot
+      MYSQL_USER: wcbot
+      MYSQL_PASSWORD: wcbot
+    command: >
+      sh -c   "sed -i.bak 's/^(bind-address|log)/#&/' /etc/mysql/my.cnf && mysqld"
