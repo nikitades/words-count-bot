@@ -12,7 +12,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<WordContext>(options =>
-    options.UseMySQL(builder.Configuration.GetConnectionString("Words"))
+{
+    options.UseMySql(builder.Configuration.GetConnectionString("Words"), new MySqlServerVersion(new Version(8, 0, 28)));
+}
 );
 
 builder.Services.AddScoped<IWordRepository, WordRepository>();

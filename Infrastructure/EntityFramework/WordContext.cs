@@ -7,7 +7,6 @@ public class WordContext : DbContext
 {
     public WordContext(DbContextOptions options) : base(options)
     {
-        
     }
 
     public DbSet<Word> Words { get; set; }
