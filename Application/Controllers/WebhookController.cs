@@ -20,20 +20,18 @@ public class WebhookController : ControllerBase
         _wordRepository = wordRepository;
     }
 
-    [Route("/api/webhook")]
-    [HttpPost]
+    [HttpPost("/api/webhook")]
     public string Get([FromBody] Update update)
     {
         _logger.Log(LogLevel.Information, "Hello");
         return "ok";
     }
 
-    [Route("/api/ping")]
-    [HttpGet]
-    public string Ping()
+    [HttpGet("/api/ping")]
+    public async Task<string> PingAsync()
     {
-        _wordRepository.GetUsagesCount("privet");
-        _logger.Log(LogLevel.Information, "ping");
+        var i = await _wordRepository.GetUsagesCount("merhaba");
+        _logger.Log(LogLevel.Information, $"ping {i}");
         return "pong";
     }
 }
