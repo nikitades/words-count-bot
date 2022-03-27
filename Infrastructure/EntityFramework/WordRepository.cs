@@ -12,8 +12,17 @@ public class WordRepository : IWordRepository
         _wordContext = wordContext;
     }
 
-    public async Task<int> GetUsagesCount(string text)
+    public async Task Add(IEnumerable<Word> words)
     {
-        return await _wordContext.Words.Where(word => word.Text == text).CountAsync();
+        await _wordContext.Words.AddRangeAsync(words);
+        await _wordContext.SaveChangesAsync();
+    }
+
+    public async Task<int> GetUsagesCount(string text, long chatId)
+    {
+        return await _wordContext.Words
+            .Where(w => w.ChatId == chatId)
+            .Where(w => w.Text == text)
+            .CountAsync();
     }
 }

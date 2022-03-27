@@ -1,7 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.Extensions.WebEncoders.Testing;
-
 namespace WordsCountBot.Domain;
 
 public class Word

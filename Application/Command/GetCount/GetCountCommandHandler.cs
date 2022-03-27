@@ -1,28 +1,24 @@
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
-using WordsCountBot.Infrastructure.EntityFramework;
+using WordsCountBot.Domain;
 
 namespace WordsCountBot.Application.Command.GetCount;
 
 public class GetCountCommandHandler : IRequestHandler<GetCountCommand>
 {
     private readonly ITelegramBotClient _client;
-    private readonly WordContext _wordContext;
+    private readonly IWordRepository _wordRepository;
 
-    public GetCountCommandHandler(
-        WordContext wordContext,
-        ITelegramBotClient client
-    )
+    public GetCountCommandHandler(IWordRepository wordRepository, ITelegramBotClient client)
     {
-        _wordContext = wordContext;
+        _wordRepository = wordRepository;
         _client = client;
     }
 
     public async Task<Unit> Handle(GetCountCommand request, CancellationToken cancellationToken)
     {
-        var count = await _wordContext.Words.Where(w => w.ChatId == request.ChatId).Where(w => w.Text == request.Word).CountAsync();
+        var count = _wordRepository.GetUsagesCount(request.Word, request.ChatId);
 
         await _client.SendTextMessageAsync(
             chatId: request.ChatId,
